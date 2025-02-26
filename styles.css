@@ -95,6 +95,11 @@ form {
   padding: 15px;
   padding-right: 0px;
   flex-grow: 1;
+  transition: 200ms ease;
+}
+
+.todo-text {
+  user-select: none;
 }
 
 .delete-button {
@@ -106,6 +111,58 @@ form {
   cursor: pointer;
 }
 
+.delete-button svg {
+  transition: 200ms ease;
+}
+
 .delete-button:hover svg {
   fill: red;
+}
+
+.custom-checkbox {
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  min-height: 20px;
+  min-width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  transition: 200ms ease;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked ~ .custom-checkbox {
+  background-color: var(--accent-color);
+}
+input[type="checkbox"]:checked ~ .custom-checkbox svg {
+  fill: var(--primary-color);
+}
+input[type="checkbox"]:checked ~ .todo-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+  color: var(--secondary-color);
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+@media (max-width: 500px) {
+  html {
+    font-size: 12pt;
+  }
+
+  #add-button {
+    position: unset;
+    width: 100%;
+    margin-top: 10px;
+    padding: 15px;
+    height: auto;
+  }
+
+  h1 {
+    margin-top: 50px;
+    font-size: 15vw;
+  }
 }
