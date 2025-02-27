@@ -4,7 +4,9 @@ const todoInput = document.getElementById("todo-input");
 const todoListUL = document.getElementById("todo-list");
 const buttonAdd = document.getElementById("add-button");
 
-let todoArray = [];
+let todoArray = getTodos();
+console.log(todoArray);
+updateUI();
 
 todoForm.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -15,8 +17,13 @@ function addTodo() {
   const todoText = todoInput.value.trim();
 
   if (todoText.length > 0) {
-    todoArray.unshift(todoText);
+    const todoObject = {
+      text: todoText,
+      completed: false,
+    };
+    todoArray.unshift(todoObject);
     updateUI();
+    saveTodos();
     todoInput.value = "";
   }
 }
@@ -32,6 +39,7 @@ function updateUI() {
 function createLI(str, strIndex) {
   const todoId = `todo-` + strIndex;
   const todoLI = document.createElement("li");
+  const todoText = str.text;
   todoLI.className = "todo";
   todoLI.innerHTML = `
           <input type="checkbox" id="${todoId}" />
@@ -46,7 +54,7 @@ function createLI(str, strIndex) {
               <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
             </svg>
           </label>
-          <label class="todo-text" for="${todoId}">${str}</label>
+          <label class="todo-text" for="${todoId}">${todoText}</label>
           <button class="delete-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,5 +70,33 @@ function createLI(str, strIndex) {
           </button>
           `;
 
+  const deleteButton = todoLI.querySelector(".delete-button");
+
+  deleteButton.addEventListener("click", () => {
+    deleteTodoItem(strIndex);
+  });
+
+  const checkbox = todoLI.querySelector("input");
+  checkbox.addEventListener("change", () => {
+    todoArray[strIndex].completed = checkbox.checked;
+    saveTodos();
+  });
+  checkbox.checked = str.completed;
   return todoLI;
+}
+
+function deleteTodoItem(strIndex) {
+  todoArray = todoArray.filter((_, i) => i !== strIndex);
+  saveTodos();
+  updateUI();
+}
+
+function saveTodos() {
+  const todoJson = JSON.stringify(todoArray);
+  localStorage.setItem("todos", todoJson);
+}
+
+function getTodos() {
+  const todos = localStorage.getItem("todos") || "[]";
+  return JSON.parse(todos);
 }
